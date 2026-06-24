@@ -48,8 +48,13 @@ function SettingsPage() {
     });
   }, [profile, reset]);
 
+  type FormVals = {
+    business_name: string; business_type: string;
+    default_language: string; default_tone: string; default_length: string;
+    custom_instruction: string;
+  };
   const mutation = useMutation({
-    mutationFn: (v: Parameters<typeof updateFn>[0]["data"]) => updateFn({ data: v }),
+    mutationFn: (v: FormVals) => updateFn({ data: v }),
     onSuccess: () => {
       toast.success("Preferences saved");
       qc.invalidateQueries({ queryKey: ["profile"] });
