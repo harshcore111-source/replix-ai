@@ -33,5 +33,5 @@ ${data.reviewText}
       prompt,
       temperature: 0.4,
     });
-    return { reply: text.trim() };
+    return { reply: `${text.trim()}\n\nThank you,\nThe Team` };
   });
