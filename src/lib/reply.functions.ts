@@ -14,6 +14,7 @@ const GenInput = z.object({
   length: z.enum(["Short", "Medium", "Long"]).default("Medium"),
   customInstruction: z.string().max(500).optional(),
   businessName: z.string().max(80).optional(),
+  isRegenerate: z.boolean().optional(),
 });
 
 function buildPrompt(i: z.infer<typeof GenInput>) {
