@@ -20,6 +20,7 @@ const GenInput = z.object({
 function buildPrompt(i: z.infer<typeof GenInput>) {
   const lengthHint = i.length === "Short" ? "1-2 sentences" : i.length === "Long" ? "4-5 sentences" : "2-3 sentences";
   const negative = i.rating <= 2;
+  const signer = (i.businessName ?? "").trim() || "The Team";
   return `You are writing a public reply to a customer review on behalf of "${i.businessName ?? "the business"}".
 
 Rules:
@@ -29,7 +30,10 @@ Rules:
 - Personalise using the review's specifics. NEVER write generic templated text.
 - ${negative ? "Apologise sincerely, acknowledge the specific issue, and invite them to contact support privately." : "Thank them warmly and reference what they liked."}
 - Do not invent facts. Do not use emojis unless tone is Casual or Friendly.
-- Output ONLY the reply text. No preface, no quotes, no signature.
+- Output ONLY the reply text. No preface, no quotes.
+- End with a short closing line that matches the sentiment and tone:
+  ${negative ? `- Negative reviews — pick one (or combine two short ones) from: We're sorry / We are really sorry / Sincere apologies / We apologize for the inconvenience / This isn't the experience we aim to provide / We take full responsibility / We regret this issue / We're working to fix this / Our team is addressing this right away / We're taking steps to improve / Please contact us so we can make this right / Share your details, we will resolve it / We'd like to discuss and fix this / Your feedback helps us improve / We value your feedback / We'll do better next time / We will follow up with you shortly / Expect an update from us soon / Thank you for bringing this to our attention / Thanks for your patience / We appreciate your understanding.` : `- Positive reviews — pick one (or combine two short ones) from: Thank you / Thank you so much / Thanks a lot / We truly appreciate it / We appreciate your support / Thanks for choosing us / We're grateful to have you with us / We look forward to seeing you again / Hope to serve you again soon / See you again soon / Have a great day / Have a wonderful day ahead / Wishing you the best / Feel free to recommend us / Your feedback means a lot to us / Best regards / Warm regards / Cheers.`}
+- After the closing line, add a signature line on a new line with the responder's name: "— ${signer}".
 ${i.customInstruction ? `- Additional instruction: ${i.customInstruction}` : ""}
 
 Customer name: ${i.customerName || "the customer"}
@@ -78,9 +82,7 @@ export const generateReply = createServerFn({ method: "POST" })
           .eq("user_id", context.userId);
       }
 
-      const signer = (data.businessName ?? "").trim() || "The Team";
-      const finalReply = `${text.trim()}\n\nThank you,\n${signer}`;
-      return { reply: finalReply, used: newUsed, limit, plan };
+      return { reply: text.trim(), used: newUsed, limit, plan };
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (msg.includes("429")) throw new Error("RATE_LIMIT");
