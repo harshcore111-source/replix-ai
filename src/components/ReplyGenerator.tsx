@@ -168,7 +168,7 @@ export function ReplyGenerator({ mode, defaults }: Props) {
                 {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
                 {copied ? "Copied" : "Copy reply"}
               </Button>
-              <Button onClick={() => mutation.mutate()} variant="outline" size="sm" disabled={mutation.isPending}>
+              <Button onClick={() => mutation.mutate({ isRegenerate: true })} variant="outline" size="sm" disabled={mutation.isPending}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Regenerate
               </Button>
             </div>
