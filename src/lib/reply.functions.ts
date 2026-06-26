@@ -78,7 +78,9 @@ export const generateReply = createServerFn({ method: "POST" })
           .eq("user_id", context.userId);
       }
 
-      return { reply: text.trim(), used: newUsed, limit, plan };
+      const signer = (data.businessName ?? "").trim() || "The Team";
+      const finalReply = `${text.trim()}\n\nThank you,\n${signer}`;
+      return { reply: finalReply, used: newUsed, limit, plan };
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (msg.includes("429")) throw new Error("RATE_LIMIT");
