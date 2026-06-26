@@ -14,6 +14,7 @@ const GenInput = z.object({
   length: z.enum(["Short", "Medium", "Long"]).default("Medium"),
   customInstruction: z.string().max(500).optional(),
   businessName: z.string().max(80).optional(),
+  isRegenerate: z.boolean().optional(),
 });
 
 function buildPrompt(i: z.infer<typeof GenInput>) {
@@ -67,13 +68,17 @@ export const generateReply = createServerFn({ method: "POST" })
         temperature: 0.4,
       });
 
-      // Increment usage
-      await context.supabase
-        .from("usage")
-        .update({ replies_used: (usage?.replies_used ?? 0) + 1, updated_at: new Date().toISOString() })
-        .eq("user_id", context.userId);
+      // Increment usage only for first generation, not regenerations
+      const currentUsed = usage?.replies_used ?? 0;
+      const newUsed = data.isRegenerate ? currentUsed : currentUsed + 1;
+      if (!data.isRegenerate) {
+        await context.supabase
+          .from("usage")
+          .update({ replies_used: newUsed, updated_at: new Date().toISOString() })
+          .eq("user_id", context.userId);
+      }
 
-      return { reply: text.trim(), used: (usage?.replies_used ?? 0) + 1, limit, plan };
+      return { reply: text.trim(), used: newUsed, limit, plan };
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (msg.includes("429")) throw new Error("RATE_LIMIT");

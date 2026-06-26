@@ -40,11 +40,11 @@ export function ReplyGenerator({ mode, defaults }: Props) {
   const genDemo = useServerFn(generateDemoReply);
 
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (opts?: { isRegenerate?: boolean }) => {
       if (mode === "demo") {
         if (getDemoCount() >= DEMO_LIMIT) throw new Error("DEMO_LIMIT");
         const out = await genDemo({ data: { reviewText, rating, tone, language } });
-        incDemoCount();
+        if (!opts?.isRegenerate) incDemoCount();
         return out;
       }
       return await genAuth({
@@ -57,6 +57,7 @@ export function ReplyGenerator({ mode, defaults }: Props) {
           length: length as never,
           customInstruction: defaults?.customInstruction || undefined,
           businessName: defaults?.businessName || undefined,
+          isRegenerate: opts?.isRegenerate ?? false,
         },
       });
     },
@@ -146,7 +147,7 @@ export function ReplyGenerator({ mode, defaults }: Props) {
         </div>
 
         <Button
-          onClick={() => mutation.mutate()}
+          onClick={() => mutation.mutate({ isRegenerate: false })}
           disabled={!reviewText.trim() || mutation.isPending}
           className="brand-gradient h-11 w-full text-primary-foreground shadow-pop"
         >
@@ -167,7 +168,7 @@ export function ReplyGenerator({ mode, defaults }: Props) {
                 {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
                 {copied ? "Copied" : "Copy reply"}
               </Button>
-              <Button onClick={() => mutation.mutate()} variant="outline" size="sm" disabled={mutation.isPending}>
+              <Button onClick={() => mutation.mutate({ isRegenerate: true })} variant="outline" size="sm" disabled={mutation.isPending}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Regenerate
               </Button>
             </div>
