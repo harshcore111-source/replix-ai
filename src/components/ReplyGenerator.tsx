@@ -40,11 +40,11 @@ export function ReplyGenerator({ mode, defaults }: Props) {
   const genDemo = useServerFn(generateDemoReply);
 
   const mutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (opts?: { isRegenerate?: boolean }) => {
       if (mode === "demo") {
         if (getDemoCount() >= DEMO_LIMIT) throw new Error("DEMO_LIMIT");
         const out = await genDemo({ data: { reviewText, rating, tone, language } });
-        incDemoCount();
+        if (!opts?.isRegenerate) incDemoCount();
         return out;
       }
       return await genAuth({
@@ -57,6 +57,7 @@ export function ReplyGenerator({ mode, defaults }: Props) {
           length: length as never,
           customInstruction: defaults?.customInstruction || undefined,
           businessName: defaults?.businessName || undefined,
+          isRegenerate: opts?.isRegenerate ?? false,
         },
       });
     },
