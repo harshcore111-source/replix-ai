@@ -49,9 +49,11 @@ function Landing() {
               Respond quickly, stay consistent, and maintain a strong brand voice across every review — in English or Hinglish.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button asChild size="lg" className="brand-gradient h-12 px-6 text-base text-primary-foreground shadow-pop">
-                <a href="#try-demo">Try the demo <ArrowRight className="ml-1 h-4 w-4" /></a>
-              </Button>
+              {!user && (
+                <Button asChild size="lg" className="brand-gradient h-12 px-6 text-base text-primary-foreground shadow-pop">
+                  <a href="#try-demo">Try the demo <ArrowRight className="ml-1 h-4 w-4" /></a>
+                </Button>
+              )}
               <Button asChild size="lg" variant="outline" className="h-12 px-6 text-base">
                 <Link to="/auth" search={{ mode: "signup" }}>Start free — 30 replies/mo</Link>
               </Button>
