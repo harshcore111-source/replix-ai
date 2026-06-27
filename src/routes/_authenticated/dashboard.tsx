@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Navbar } from "@/components/Navbar";
 import { StarRating } from "@/components/StarRating";
 import { ReplyGenerator } from "@/components/ReplyGenerator";
-import { addReview, deleteReview, listReviews, markReplied } from "@/lib/reviews.functions";
+import { addReview, deleteReview, listReplies, listReviews, markReplied } from "@/lib/reviews.functions";
 import { getProfile, getUsage } from "@/lib/profile.functions";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { toast } from "sonner";
