@@ -58,3 +58,47 @@ export const deleteReview = createServerFn({ method: "POST" })
     if (error) throw error;
     return { ok: true };
   });
+
+const saveGeneratedSchema = z.object({
+  customer_name: z.string().max(80).optional(),
+  rating: z.number().int().min(1).max(5),
+  review_text: z.string().min(1).max(2000),
+  reply_text: z.string().min(1).max(4000),
+});
+
+export const saveGeneratedReply = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => saveGeneratedSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const { data: review, error: rErr } = await context.supabase
+      .from("reviews")
+      .insert({
+        user_id: context.userId,
+        customer_name: data.customer_name,
+        rating: data.rating,
+        review_text: data.review_text,
+        status: "replied",
+      })
+      .select()
+      .single();
+    if (rErr) throw rErr;
+    const { error: pErr } = await context.supabase
+      .from("replies")
+      .insert({ user_id: context.userId, review_id: review.id, reply_text: data.reply_text });
+    if (pErr) throw pErr;
+    return { ok: true };
+  });
+
+export const listReplies = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("replies")
+      .select("id, reply_text, created_at, review:reviews(id, customer_name, rating, review_text)")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (error) throw error;
+    return data ?? [];
+  });
+
