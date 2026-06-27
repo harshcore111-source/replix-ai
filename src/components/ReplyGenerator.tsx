@@ -14,6 +14,9 @@ import { generateReply } from "@/lib/reply.functions";
 import { generateDemoReply } from "@/lib/demo.functions";
 import { DEMO_LIMIT, getDemoCount, incDemoCount } from "@/lib/demo";
 
+import { saveGeneratedReply } from "@/lib/reviews.functions";
+import { useQueryClient } from "@tanstack/react-query";
+
 type Props = {
   mode: "auth" | "demo";
   defaults?: {
@@ -26,7 +29,8 @@ type Props = {
   onSaved?: () => void;
 };
 
-export function ReplyGenerator({ mode, defaults }: Props) {
+export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
+
   const [reviewText, setReviewText] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [rating, setRating] = useState(5);
