@@ -84,8 +84,26 @@ export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
     await navigator.clipboard.writeText(reply);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-    if (mode === "auth") setReply(""); // clear after use per spec
+    if (mode === "auth") {
+      try {
+        await saveFn({
+          data: {
+            customer_name: customerName || undefined,
+            rating,
+            review_text: reviewText,
+            reply_text: reply,
+          },
+        });
+        qc.invalidateQueries({ queryKey: ["replies"] });
+        qc.invalidateQueries({ queryKey: ["reviews"] });
+        onSaved?.();
+      } catch {
+        // non-fatal
+      }
+      setReply("");
+    }
   };
+
 
   return (
     <Card className="border-border/60 shadow-soft">
