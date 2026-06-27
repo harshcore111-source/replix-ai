@@ -68,7 +68,10 @@ export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
         },
       });
     },
-    onSuccess: (out) => setReply(out.reply),
+    onSuccess: (out) => {
+      setReply(out.reply);
+      qc.invalidateQueries({ queryKey: ["usage"] });
+    },
     onError: (e: Error) => {
       if (e.message === "DEMO_LIMIT")
         toast.error("Demo limit reached", { description: "Sign up to keep generating replies." });
@@ -78,6 +81,7 @@ export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
       else if (e.message === "CREDITS_EXHAUSTED") toast.error("AI credits exhausted. Please upgrade.");
       else toast.error("Could not generate reply", { description: e.message });
     },
+
   });
 
   const copy = async () => {
