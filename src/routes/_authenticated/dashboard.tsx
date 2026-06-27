@@ -31,10 +31,13 @@ function Dashboard() {
   const delFn = useServerFn(deleteReview);
   const profileFn = useServerFn(getProfile);
   const usageFn = useServerFn(getUsage);
+  const repliesFn = useServerFn(listReplies);
 
   const { data: reviews = [] } = useQuery({ queryKey: ["reviews"], queryFn: () => listFn() });
   const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => profileFn() });
   const { data: usage } = useQuery({ queryKey: ["usage"], queryFn: () => usageFn() });
+  const { data: replies = [] } = useQuery({ queryKey: ["replies"], queryFn: () => repliesFn() });
+
 
   const used = usage?.replies_used ?? 0;
   const plan = (usage?.plan_type ?? "free") as keyof typeof PLAN_LIMITS;
