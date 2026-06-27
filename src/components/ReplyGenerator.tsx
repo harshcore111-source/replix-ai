@@ -100,6 +100,8 @@ export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
         });
         qc.invalidateQueries({ queryKey: ["replies"] });
         qc.invalidateQueries({ queryKey: ["reviews"] });
+        qc.invalidateQueries({ queryKey: ["usage"] });
+
         onSaved?.();
       } catch {
         // non-fatal
