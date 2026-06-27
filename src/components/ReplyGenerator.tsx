@@ -42,6 +42,9 @@ export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
 
   const genAuth = useServerFn(generateReply);
   const genDemo = useServerFn(generateDemoReply);
+  const saveFn = useServerFn(saveGeneratedReply);
+  const qc = useQueryClient();
+
 
   const mutation = useMutation({
     mutationFn: async (opts?: { isRegenerate?: boolean }) => {
