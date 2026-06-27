@@ -29,6 +29,7 @@ const FAKE_REVIEWS = [
 ];
 
 function Landing() {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
