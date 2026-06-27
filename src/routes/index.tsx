@@ -60,10 +60,11 @@ function Landing() {
             </div>
           </div>
 
-          {/* DEMO */}
-          <div id="try-demo" className="mx-auto mt-12 max-w-3xl scroll-mt-20">
-            <ReplyGenerator mode="demo" />
-          </div>
+          {!user && (
+            <div id="try-demo" className="mx-auto mt-12 max-w-3xl scroll-mt-20">
+              <ReplyGenerator mode="demo" />
+            </div>
+          )}
         </div>
       </section>
 
