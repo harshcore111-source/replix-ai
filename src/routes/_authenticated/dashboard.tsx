@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Navbar } from "@/components/Navbar";
 import { StarRating } from "@/components/StarRating";
 import { ReplyGenerator } from "@/components/ReplyGenerator";
-import { addReview, deleteReview, listReviews, markReplied } from "@/lib/reviews.functions";
+import { addReview, deleteReview, listReplies, listReviews, markReplied } from "@/lib/reviews.functions";
 import { getProfile, getUsage } from "@/lib/profile.functions";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { toast } from "sonner";
@@ -31,10 +31,13 @@ function Dashboard() {
   const delFn = useServerFn(deleteReview);
   const profileFn = useServerFn(getProfile);
   const usageFn = useServerFn(getUsage);
+  const repliesFn = useServerFn(listReplies);
 
   const { data: reviews = [] } = useQuery({ queryKey: ["reviews"], queryFn: () => listFn() });
   const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => profileFn() });
   const { data: usage } = useQuery({ queryKey: ["usage"], queryFn: () => usageFn() });
+  const { data: replies = [] } = useQuery({ queryKey: ["replies"], queryFn: () => repliesFn() });
+
 
   const used = usage?.replies_used ?? 0;
   const plan = (usage?.plan_type ?? "free") as keyof typeof PLAN_LIMITS;
@@ -173,10 +176,46 @@ function Dashboard() {
             })}
           </div>
         )}
+
+        {/* History */}
+        <div className="mt-10">
+          <h2 className="mb-3 text-xl font-semibold md:text-2xl">Reply history</h2>
+          {replies.length === 0 ? (
+            <Card className="border-dashed">
+              <CardContent className="py-8 text-center text-sm text-muted-foreground">
+                Copied replies will appear here.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {replies.map((r) => {
+                const rev = (r as { review?: { customer_name: string | null; rating: number; review_text: string } | null }).review;
+                return (
+                  <Card key={r.id} className="border-border/60">
+                    <CardContent className="space-y-3 p-4">
+                      {rev && (
+                        <div className="rounded-lg border border-border bg-muted/40 p-3 text-sm">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-medium">{rev.customer_name || "Anonymous"}</p>
+                            <StarRating value={rev.rating} size={14} />
+                          </div>
+                          <p className="mt-1 text-muted-foreground">{rev.review_text}</p>
+                        </div>
+                      )}
+                      <p className="whitespace-pre-wrap text-sm">{r.reply_text}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString()}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
 
 function Stat({ label, value, accent }: { label: string; value: number | string; accent?: "success" | "star" }) {
   return (

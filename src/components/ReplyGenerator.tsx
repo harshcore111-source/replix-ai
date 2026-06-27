@@ -14,6 +14,9 @@ import { generateReply } from "@/lib/reply.functions";
 import { generateDemoReply } from "@/lib/demo.functions";
 import { DEMO_LIMIT, getDemoCount, incDemoCount } from "@/lib/demo";
 
+import { saveGeneratedReply } from "@/lib/reviews.functions";
+import { useQueryClient } from "@tanstack/react-query";
+
 type Props = {
   mode: "auth" | "demo";
   defaults?: {
@@ -26,7 +29,8 @@ type Props = {
   onSaved?: () => void;
 };
 
-export function ReplyGenerator({ mode, defaults }: Props) {
+export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
+
   const [reviewText, setReviewText] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [rating, setRating] = useState(5);
@@ -38,6 +42,9 @@ export function ReplyGenerator({ mode, defaults }: Props) {
 
   const genAuth = useServerFn(generateReply);
   const genDemo = useServerFn(generateDemoReply);
+  const saveFn = useServerFn(saveGeneratedReply);
+  const qc = useQueryClient();
+
 
   const mutation = useMutation({
     mutationFn: async (opts?: { isRegenerate?: boolean }) => {
@@ -77,8 +84,26 @@ export function ReplyGenerator({ mode, defaults }: Props) {
     await navigator.clipboard.writeText(reply);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-    if (mode === "auth") setReply(""); // clear after use per spec
+    if (mode === "auth") {
+      try {
+        await saveFn({
+          data: {
+            customer_name: customerName || undefined,
+            rating,
+            review_text: reviewText,
+            reply_text: reply,
+          },
+        });
+        qc.invalidateQueries({ queryKey: ["replies"] });
+        qc.invalidateQueries({ queryKey: ["reviews"] });
+        onSaved?.();
+      } catch {
+        // non-fatal
+      }
+      setReply("");
+    }
   };
+
 
   return (
     <Card className="border-border/60 shadow-soft">
