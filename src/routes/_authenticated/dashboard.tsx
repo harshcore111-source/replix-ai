@@ -71,7 +71,9 @@ function Dashboard() {
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold md:text-4xl">Dashboard</h1>
+            <h1 className="text-3xl font-bold md:text-4xl">
+              {profile?.business_name ? `Hello, ${profile.business_name}!` : "Dashboard"}
+            </h1>
             <p className="text-sm text-muted-foreground">Manage and reply to your customer reviews.</p>
           </div>
           <div className="flex gap-2">
