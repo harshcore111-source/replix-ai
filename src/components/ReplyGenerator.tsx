@@ -178,7 +178,7 @@ export function ReplyGenerator({ mode, defaults, onSaved }: Props) {
         </div>
 
         <Button
-          onClick={() => mutation.mutate({ isRegenerate: false })}
+          onClick={() => mutation.mutate({ isRegenerate: !!reply })}
           disabled={!reviewText.trim() || mutation.isPending}
           className="brand-gradient h-11 w-full text-primary-foreground shadow-pop"
         >
