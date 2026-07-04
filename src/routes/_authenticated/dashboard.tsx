@@ -287,7 +287,7 @@ function ReplyDialog({
       <DialogTrigger asChild>
         <Button size="sm" className="brand-gradient text-primary-foreground"><Sparkles className="mr-1 h-3.5 w-3.5" /> Reply</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader><DialogTitle>Generate reply</DialogTitle></DialogHeader>
         <div className="rounded-lg border border-border bg-muted/40 p-3 text-sm">
           <p className="font-medium">{review.customer_name || "Anonymous"} · {review.rating}★</p>
