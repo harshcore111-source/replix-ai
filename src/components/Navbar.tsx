@@ -54,6 +54,9 @@ export function Navbar() {
               <Button asChild size="sm" className="hidden sm:flex brand-gradient text-primary-foreground shadow-pop">
                 <Link to="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard</Link>
               </Button>
+              <Button asChild size="sm" className="sm:hidden brand-gradient text-primary-foreground shadow-pop">
+                <Link to="/home"><Wand2 className="mr-2 h-4 w-4" /> Generate</Link>
+              </Button>
               <Button asChild size="sm" className="hidden sm:flex brand-gradient text-primary-foreground shadow-pop">
                 <Link to="/home"><Wand2 className="mr-2 h-4 w-4" /> Generate reply</Link>
               </Button>
@@ -66,9 +69,6 @@ export function Navbar() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate({ to: "/home" })}>
-                  <Wand2 className="mr-2 h-4 w-4" /> Generate reply
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
                   <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
                 </DropdownMenuItem>
