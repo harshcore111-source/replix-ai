@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { Menu, LayoutDashboard, Home, CreditCard, Settings, User, LogOut, Moon, Sun, Sparkles } from "lucide-react";
+import { Menu, LayoutDashboard, Home, CreditCard, Settings, User, LogOut, Moon, Sun, Sparkles, Wand2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
