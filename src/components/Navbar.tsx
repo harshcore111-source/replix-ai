@@ -67,7 +67,10 @@ export function Navbar() {
                 <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate({ to: "/home" })}>
-                  <Home className="mr-2 h-4 w-4" /> Home
+                  <Wand2 className="mr-2 h-4 w-4" /> Generate reply
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
+                  <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
                   <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
