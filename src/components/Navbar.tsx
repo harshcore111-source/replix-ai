@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { Menu, LayoutDashboard, Home, CreditCard, Settings, User, LogOut, Moon, Sun, Sparkles } from "lucide-react";
+import { Menu, LayoutDashboard, Home, CreditCard, Settings, User, LogOut, Moon, Sun, Sparkles, Wand2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,6 +54,9 @@ export function Navbar() {
               <Button asChild variant="outline" size="sm" className="hidden sm:flex">
                 <Link to="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard</Link>
               </Button>
+              <Button asChild size="sm" className="hidden sm:flex brand-gradient text-primary-foreground shadow-pop">
+                <Link to="/home"><Wand2 className="mr-2 h-4 w-4" /> Generate reply</Link>
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon" aria-label="Menu">
@@ -64,7 +67,10 @@ export function Navbar() {
                 <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate({ to: "/home" })}>
-                  <Home className="mr-2 h-4 w-4" /> Home
+                  <Wand2 className="mr-2 h-4 w-4" /> Generate reply
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
+                  <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>
                   <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
