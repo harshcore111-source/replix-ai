@@ -54,6 +54,9 @@ export function Navbar() {
               <Button asChild variant="outline" size="sm" className="hidden sm:flex">
                 <Link to="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard</Link>
               </Button>
+              <Button asChild size="sm" className="hidden sm:flex brand-gradient text-primary-foreground shadow-pop">
+                <Link to="/home"><Wand2 className="mr-2 h-4 w-4" /> Generate reply</Link>
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon" aria-label="Menu">
